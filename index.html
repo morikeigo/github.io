@@ -3,69 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your App Namea</title>
+    <title>Your App Name</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #4285f4;
+            --primary-dark: #3367d6;
+            --background: #f8f9fa;
+            --text: #333;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
         }
 
         header {
-            background-color: #4285f4;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: #fff;
+            padding: 2rem 1rem;
             text-align: center;
-            padding: 1em;
+        }
+
+        header h1 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        nav {
+            margin-top: 1rem;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 0.5rem;
+            font-weight: 300;
         }
 
         section {
-            max-width: 800px;
-            margin: 2em auto;
-            padding: 2em;
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 2rem;
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
         }
 
-        h1, h2 {
-            color: #4285f4;
-        }
-
-        p {
-            line-height: 1.6;
+        h2 {
+            color: var(--primary);
+            margin-top: 0;
         }
 
         footer {
             text-align: center;
-            padding: 1em;
-            background-color: #4285f4;
+            padding: 1rem;
+            background-color: var(--primary);
             color: #fff;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+        }
+
+        @media (max-width: 600px) {
+            section {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Your App Name</h1>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#privacy">Privacy</a>
+            <a href="#contact">Contact</a>
+        </nav>
     </header>
 
-    <section>
+    <section id="about">
         <h2>About Us</h2>
         <p>
             Welcome to Your App Name! We are passionate about creating innovative solutions that make a difference.
             [アプリに関する簡単な説明や特徴をここに追加]
         </p>
 
-        <h2>Privacy Policy</h2>
+        <h2 id="privacy">Privacy Policy</h2>
         <p>
             [プライバシーポリシーの内容をここに追加]
         </p>
 
-        <h2>Contact Us</h2>
+        <h2 id="contact">Contact Us</h2>
         <p>
             Have questions or feedback? Feel free to reach out to us at:
             <br>
