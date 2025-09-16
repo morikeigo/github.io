@@ -56,14 +56,61 @@
             opacity: 0.75;
         }
 
-        section {
+        main {
             max-width: 900px;
             margin: 3rem auto;
+            padding: 0 1rem 3rem;
+        }
+
+        section {
             padding: 2.5rem;
             background: linear-gradient(145deg, var(--surface), rgba(238, 244, 255, 0.85));
             border-radius: 20px;
             box-shadow: 0 12px 30px rgba(138, 182, 255, 0.25);
             border: 1px solid rgba(138, 182, 255, 0.3);
+        }
+
+        .tab-container {
+            margin-top: 1rem;
+        }
+
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .tab-button {
+            padding: 0.75rem 1.75rem;
+            border-radius: 999px;
+            border: none;
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(138, 182, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(106, 156, 245, 0.4);
+        }
+
+        .tab-button.active {
+            background: var(--primary-dark);
+            color: #fff;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         h2 {
@@ -75,6 +122,19 @@
             color: var(--primary-dark);
         }
 
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: 360px;
+            margin-top: 1.5rem;
+        }
+
+        .chart-wrapper canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
         footer {
             text-align: center;
             padding: 1.5rem 1rem;
@@ -83,10 +143,24 @@
             box-shadow: 0 -6px 20px rgba(106, 156, 245, 0.2);
         }
 
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         @media (max-width: 600px) {
+            main {
+                padding: 0 1rem 2rem;
+            }
+
             section {
-                margin: 1rem;
-                padding: 1.5rem;
+                padding: 1.75rem;
             }
         }
     </style>
@@ -101,30 +175,146 @@
         </nav>
     </header>
 
-    <section id="about">
-        <h2>About Us</h2>
-        <p>
-            Welcome to Your App Name! We are passionate about creating innovative solutions that make a difference.
-            [アプリに関する簡単な説明や特徴をここに追加]
-        </p>
+    <main>
+        <section>
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-button active" data-tab="overview">Overview</button>
+                    <button class="tab-button" data-tab="statistics">Statistics</button>
+                </div>
+                <div class="tab-content active" id="tab-overview">
+                    <h2 id="about">About Us</h2>
+                    <p>
+                        Welcome to Your App Name! We are passionate about creating innovative solutions that make a difference.
+                        [アプリに関する簡単な説明や特徴をここに追加]
+                    </p>
 
-        <h2 id="privacy">Privacy Policy</h2>
-        <p>
-            [プライバシーポリシーの内容をここに追加]
-        </p>
+                    <h2 id="privacy">Privacy Policy</h2>
+                    <p>
+                        [プライバシーポリシーの内容をここに追加]
+                    </p>
 
-        <h2 id="contact">Contact Us</h2>
-        <p>
-            Have questions or feedback? Feel free to reach out to us at:
-            <br>
-            Email: <a href="mailto:contact@example.com">contact@example.com</a>
-            <br>
-            Phone: +1 (123) 456-7890
-        </p>
-    </section>
+                    <h2 id="contact">Contact Us</h2>
+                    <p>
+                        Have questions or feedback? Feel free to reach out to us at:
+                        <br>
+                        Email: <a href="mailto:contact@example.com">contact@example.com</a>
+                        <br>
+                        Phone: +1 (123) 456-7890
+                    </p>
+                </div>
+                <div class="tab-content" id="tab-statistics">
+                    <h2>Statistics</h2>
+                    <p>
+                        Explore the bell curve of a standard normal distribution (mean 0, standard deviation 1). This curve illustrates
+                        how values cluster around the mean and taper off symmetrically on both sides.
+                    </p>
+                    <div class="chart-wrapper">
+                        <canvas id="normalDistributionChart" aria-label="Normal distribution chart" role="img"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <footer>
         &copy; 2024 Your App Name. All rights reserved.
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            const showTab = (name) => {
+                tabButtons.forEach((button) => {
+                    button.classList.toggle('active', button.dataset.tab === name);
+                });
+
+                tabContents.forEach((content) => {
+                    content.classList.toggle('active', content.id === `tab-${name}`);
+                });
+            };
+
+            tabButtons.forEach((button) => {
+                button.addEventListener('click', () => showTab(button.dataset.tab));
+            });
+
+            document.querySelectorAll('header nav a').forEach((link) => {
+                link.addEventListener('click', () => showTab('overview'));
+            });
+
+            showTab('overview');
+
+            const ctx = document.getElementById('normalDistributionChart');
+            if (!ctx) {
+                return;
+            }
+
+            const mean = 0;
+            const stdDev = 1;
+            const labels = [];
+            const values = [];
+
+            for (let x = -4; x <= 4; x += 0.1) {
+                labels.push(x.toFixed(1));
+                const exponent = -Math.pow(x - mean, 2) / (2 * Math.pow(stdDev, 2));
+                const density = (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(exponent);
+                values.push(density);
+            }
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [
+                        {
+                            label: 'Normal Distribution (μ = 0, σ = 1)',
+                            data: values,
+                            borderColor: 'rgba(106, 156, 245, 1)',
+                            backgroundColor: 'rgba(138, 182, 255, 0.25)',
+                            borderWidth: 2,
+                            fill: true,
+                            pointRadius: 0,
+                            tension: 0.35,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => `Probability Density: ${context.parsed.y.toFixed(4)}`,
+                            },
+                        },
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Standard Deviations from the Mean',
+                            },
+                            ticks: {
+                                maxTicksLimit: 9,
+                            },
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Probability Density',
+                            },
+                            beginAtZero: true,
+                        },
+                    },
+                },
+            });
+        });
+    </script>
 </body>
 </html>
