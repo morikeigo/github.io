@@ -135,6 +135,38 @@
             height: 100% !important;
         }
 
+        .distribution-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .distribution-control {
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .distribution-control label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+            color: var(--primary-dark);
+            margin-bottom: 0.35rem;
+        }
+
+        .control-value {
+            font-weight: 700;
+            color: var(--text);
+            margin-left: 0.5rem;
+        }
+
+        .distribution-control input[type='range'] {
+            width: 100%;
+            accent-color: var(--primary-dark);
+        }
+
         footer {
             text-align: center;
             padding: 1.5rem 1rem;
@@ -206,9 +238,43 @@
                 <div class="tab-content" id="tab-statistics">
                     <h2>Statistics</h2>
                     <p>
-                        Explore the bell curve of a standard normal distribution (mean 0, standard deviation 1). This curve illustrates
-                        how values cluster around the mean and taper off symmetrically on both sides.
+                        Explore the bell curve of a normal distribution. Use the controls below to adjust the mean (μ) and standard
+                        deviation (σ) and see how the shape of the curve responds in real time.
                     </p>
+                    <div class="distribution-controls" role="group" aria-label="Normal distribution controls">
+                        <div class="distribution-control">
+                            <label for="meanInput">
+                                Mean (μ)
+                                <span class="control-value" id="meanValue">0.00</span>
+                            </label>
+                            <input
+                                type="range"
+                                id="meanInput"
+                                name="meanInput"
+                                min="-5"
+                                max="5"
+                                step="0.1"
+                                value="0"
+                                aria-describedby="meanValue"
+                            />
+                        </div>
+                        <div class="distribution-control">
+                            <label for="stdDevInput">
+                                Standard Deviation (σ)
+                                <span class="control-value" id="stdDevValue">1.00</span>
+                            </label>
+                            <input
+                                type="range"
+                                id="stdDevInput"
+                                name="stdDevInput"
+                                min="0.2"
+                                max="3"
+                                step="0.1"
+                                value="1"
+                                aria-describedby="stdDevValue"
+                            />
+                        </div>
+                    </div>
                     <div class="chart-wrapper">
                         <canvas id="normalDistributionChart" aria-label="Normal distribution chart" role="img"></canvas>
                     </div>
@@ -252,32 +318,78 @@
                 return;
             }
 
-            const mean = 0;
-            const stdDev = 1;
-            const labels = [];
-            const values = [];
+            const meanInput = document.getElementById('meanInput');
+            const stdDevInput = document.getElementById('stdDevInput');
+            const meanValueDisplay = document.getElementById('meanValue');
+            const stdDevValueDisplay = document.getElementById('stdDevValue');
 
-            for (let x = -4; x <= 4; x += 0.1) {
-                labels.push(x.toFixed(1));
-                const exponent = -Math.pow(x - mean, 2) / (2 * Math.pow(stdDev, 2));
-                const density = (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(exponent);
-                values.push(density);
+            if (!meanInput || !stdDevInput || !meanValueDisplay || !stdDevValueDisplay) {
+                return;
             }
 
-            new Chart(ctx, {
+            const formatValue = (value) => Number(value).toFixed(2);
+
+            const sanitizeParameters = () => {
+                let mean = parseFloat(meanInput.value);
+                if (!Number.isFinite(mean)) {
+                    mean = 0;
+                }
+                mean = Number(mean.toFixed(1));
+
+                let stdDev = parseFloat(stdDevInput.value);
+                const minStdDev = parseFloat(stdDevInput.min) || 0.1;
+                if (!Number.isFinite(stdDev) || stdDev <= 0) {
+                    stdDev = minStdDev;
+                } else if (stdDev < minStdDev) {
+                    stdDev = minStdDev;
+                }
+                stdDev = Number(stdDev.toFixed(1));
+
+                meanInput.value = mean.toFixed(1);
+                stdDevInput.value = stdDev.toFixed(1);
+
+                meanValueDisplay.textContent = formatValue(mean);
+                stdDevValueDisplay.textContent = formatValue(stdDev);
+
+                return { mean, stdDev };
+            };
+
+            const generateNormalDistribution = (mean, stdDev) => {
+                const data = [];
+                const min = mean - 4 * stdDev;
+                const max = mean + 4 * stdDev;
+
+                for (let z = -4; z <= 4.000001; z += 0.1) {
+                    const x = mean + z * stdDev;
+                    const exponent = -0.5 * z * z;
+                    const density = (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(exponent);
+                    data.push({ x, y: density });
+                }
+
+                return { data, min, max };
+            };
+
+            const { mean: initialMean, stdDev: initialStdDev } = sanitizeParameters();
+            const {
+                data: initialData,
+                min: initialMin,
+                max: initialMax,
+            } = generateNormalDistribution(initialMean, initialStdDev);
+
+            const normalChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels,
                     datasets: [
                         {
-                            label: 'Normal Distribution (μ = 0, σ = 1)',
-                            data: values,
+                            label: `Normal Distribution (μ = ${formatValue(initialMean)}, σ = ${formatValue(initialStdDev)})`,
+                            data: initialData,
                             borderColor: 'rgba(106, 156, 245, 1)',
                             backgroundColor: 'rgba(138, 182, 255, 0.25)',
                             borderWidth: 2,
                             fill: true,
                             pointRadius: 0,
                             tension: 0.35,
+                            parsing: false,
                         },
                     ],
                 },
@@ -290,19 +402,24 @@
                         },
                         tooltip: {
                             callbacks: {
-                                label: (context) => `Probability Density: ${context.parsed.y.toFixed(4)}`,
+                                label: (context) =>
+                                    `x = ${context.parsed.x.toFixed(2)}, f(x) = ${context.parsed.y.toFixed(4)}`,
                             },
                         },
                     },
                     scales: {
                         x: {
+                            type: 'linear',
                             title: {
                                 display: true,
-                                text: 'Standard Deviations from the Mean',
+                                text: 'Value',
                             },
                             ticks: {
                                 maxTicksLimit: 9,
+                                callback: (value) => Number(value).toFixed(1),
                             },
+                            min: initialMin,
+                            max: initialMax,
                         },
                         y: {
                             title: {
@@ -314,6 +431,20 @@
                     },
                 },
             });
+
+            const updateChart = () => {
+                const { mean, stdDev } = sanitizeParameters();
+                const { data, min, max } = generateNormalDistribution(mean, stdDev);
+
+                normalChart.data.datasets[0].data = data;
+                normalChart.data.datasets[0].label = `Normal Distribution (μ = ${formatValue(mean)}, σ = ${formatValue(stdDev)})`;
+                normalChart.options.scales.x.min = min;
+                normalChart.options.scales.x.max = max;
+                normalChart.update();
+            };
+
+            meanInput.addEventListener('input', updateChart);
+            stdDevInput.addEventListener('input', updateChart);
         });
     </script>
 </body>
