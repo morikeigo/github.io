@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>為替レート一覧 | Your App Name</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="exchange.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>為替レート一覧</h1>
+        <p class="header-subtitle">
+            Frankfurter API（欧州中央銀行の公表レート）から取得した最新のUSD/JPYとEUR/JPYのレートです。
+        </p>
+        <nav>
+            <a href="index.html">トップページに戻る</a>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h2>主要通貨のレート</h2>
+            <p>
+                Frankfurterは営業日に1回更新されるため、このページでは1時間おきにレートを再取得します。
+            </p>
+
+            <div class="rates-meta">
+                <div class="rates-meta-item">
+                    <span class="rates-meta-label">データ日</span>
+                    <span class="rates-meta-value" id="ratesDataDate">—</span>
+                </div>
+                <div class="rates-meta-item">
+                    <span class="rates-meta-label">取得時刻</span>
+                    <span class="rates-meta-value" id="lastUpdated">—</span>
+                </div>
+                <button type="button" class="refresh-button" id="refreshRatesButton">今すぐ更新</button>
+            </div>
+
+            <div class="rates-table-wrapper">
+                <table class="rates-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">通貨ペア</th>
+                            <th scope="col">レート</th>
+                            <th scope="col">レート更新日</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ratesBody">
+                        <tr>
+                            <th scope="row">USD / JPY</th>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">EUR / JPY</th>
+                            <td>—</td>
+                            <td>—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p id="statusMessage" class="rates-status-message" role="status" aria-live="polite">
+                最新のレートを取得しています...
+            </p>
+
+            <p class="rates-footnote">
+                データソース: <a href="https://www.frankfurter.dev/docs/" target="_blank" rel="noopener noreferrer">Frankfurter API</a>
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2024 Your App Name. All rights reserved.
+    </footer>
+</body>
+</html>
