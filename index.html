@@ -3,77 +3,371 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your App Namea</title>
+    <title>Your App Name</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --background-top: #fbf9ff;
+            --background-bottom: #fef8f4;
+            --accent: #8aa9f7;
+            --accent-strong: #5c7be9;
+            --highlight: #f9bcd7;
+            --surface: rgba(255, 255, 255, 0.82);
+            --surface-strong: rgba(255, 255, 255, 0.92);
+            --text-primary: #2c2744;
+            --text-muted: #6a6884;
+            --shadow-soft: 0 35px 80px rgba(142, 163, 213, 0.22);
+            --shadow-panel: 0 22px 60px rgba(186, 199, 232, 0.28);
+            --shadow-footer: 0 14px 32px rgba(193, 184, 223, 0.4);
+            --border-soft: rgba(255, 255, 255, 0.65);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 1.25rem 4rem;
+            font-family: 'Outfit', 'Noto Sans JP', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: var(--text-primary);
+            background: linear-gradient(180deg, var(--background-top) 0%, var(--background-bottom) 100%);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            z-index: -2;
+            filter: blur(0px);
+            opacity: 0.65;
+        }
+
+        body::before {
+            top: -160px;
+            left: -120px;
+            background: radial-gradient(circle at center, rgba(248, 213, 235, 0.85) 0%, rgba(248, 213, 235, 0) 70%);
+        }
+
+        body::after {
+            right: -150px;
+            bottom: -200px;
+            background: radial-gradient(circle at center, rgba(188, 210, 255, 0.85) 0%, rgba(188, 210, 255, 0) 70%);
         }
 
         header {
-            background-color: #4285f4;
-            color: #fff;
+            position: relative;
+            width: min(960px, 100%);
+            margin: 3.5rem auto 2.5rem;
+            padding: clamp(3rem, 8vw, 4.5rem) clamp(1.75rem, 6vw, 3.5rem) clamp(2.5rem, 6vw, 3.5rem);
             text-align: center;
-            padding: 1em;
+            background: var(--surface);
+            border: 1px solid var(--border-soft);
+            border-radius: 32px;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+        }
+
+        header::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 226, 246, 0.55) 35%, rgba(215, 224, 255, 0.42) 100%);
+            opacity: 0.7;
+            z-index: -1;
+        }
+
+        header h1 {
+            margin: 1rem 0 1.25rem;
+            font-size: clamp(2.25rem, 5.2vw, 3.1rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        header p {
+            margin: 0 auto;
+            max-width: 640px;
+            font-size: clamp(1.05rem, 2.6vw, 1.25rem);
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.45rem 1.4rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: var(--accent-strong);
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.76rem;
+        }
+
+        .hero-actions {
+            margin-top: 2.2rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-actions a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.85rem 1.75rem;
+            border-radius: 999px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+
+        .button-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-strong) 100%);
+            color: #ffffff;
+            box-shadow: 0 18px 35px rgba(137, 165, 246, 0.35);
+        }
+
+        .button-primary:hover,
+        .button-primary:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 22px 45px rgba(127, 150, 242, 0.38);
+        }
+
+        .button-ghost {
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--accent-strong);
+            border: 1px solid rgba(138, 169, 247, 0.3);
+        }
+
+        .button-ghost:hover,
+        .button-ghost:focus {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 14px 30px rgba(166, 187, 240, 0.32);
+        }
+
+        nav {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1.2rem;
+            border-radius: 999px;
+            text-decoration: none;
+            font-weight: 500;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            transition: background 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        nav a:hover,
+        nav a:focus {
+            color: var(--accent-strong);
+            background: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 12px 25px rgba(173, 188, 232, 0.32);
+        }
+
+        main {
+            width: min(960px, 100%);
+            display: grid;
+            gap: 1.75rem;
+            margin-bottom: 3.5rem;
         }
 
         section {
-            max-width: 800px;
-            margin: 2em auto;
-            padding: 2em;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            position: relative;
+            padding: clamp(2.4rem, 6vw, 3rem) clamp(1.75rem, 5vw, 2.75rem);
+            background: var(--surface-strong);
+            border-radius: 26px;
+            border: 1px solid var(--border-soft);
+            box-shadow: var(--shadow-panel);
+            overflow: hidden;
         }
 
-        h1, h2 {
-            color: #4285f4;
+        section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(140deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 242, 251, 0.45) 45%, rgba(223, 233, 255, 0.35) 100%);
+            opacity: 0.8;
+            z-index: -1;
+        }
+
+        h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: clamp(1.6rem, 3.5vw, 1.9rem);
+            color: var(--accent-strong);
         }
 
         p {
-            line-height: 1.6;
+            margin: 0 0 1.4rem;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+        }
+
+        .placeholder-text {
+            display: block;
+            margin-top: 0.85rem;
+            font-size: 0.96rem;
+            color: rgba(106, 104, 132, 0.78);
+        }
+
+        .contact-card {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem 1.6rem;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(138, 169, 247, 0.25);
+            box-shadow: 0 16px 35px rgba(172, 188, 236, 0.25);
+        }
+
+        .contact-card a,
+        .contact-card span {
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .contact-card a {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--accent-strong);
+        }
+
+        .contact-card a::before {
+            content: "✉";
+            font-size: 1rem;
+        }
+
+        .contact-card span::before {
+            content: "☎";
+            margin-right: 0.4rem;
         }
 
         footer {
+            width: min(960px, 100%);
+            margin: auto auto 1.75rem;
+            padding: 1.5rem 1.25rem;
             text-align: center;
-            padding: 1em;
-            background-color: #4285f4;
-            color: #fff;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            color: rgba(60, 56, 94, 0.76);
+            font-weight: 500;
+            box-shadow: var(--shadow-footer);
+        }
+
+        @media (max-width: 720px) {
+            header {
+                margin-top: 2.5rem;
+            }
+
+            nav {
+                gap: 0.5rem;
+            }
+
+            nav a {
+                padding-inline: 1rem;
+            }
+
+            section {
+                padding: 2.2rem 1.6rem;
+            }
+
+            footer {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Your App Name</h1>
+        <span class="hero-badge">Your App Name</span>
+        <h1>Designing calm, human experiences for your users</h1>
+        <p>
+            Welcome to Your App Name! We craft intuitive products that blend gentle aesthetics with purposeful functionality so your audience can focus on what matters most.
+        </p>
+        <div class="hero-actions">
+            <a class="button-primary" href="#about">サービスについて</a>
+            <a class="button-ghost" href="#contact">お問い合わせ</a>
+        </div>
+        <nav aria-label="Primary">
+            <a href="#about">About</a>
+            <a href="#privacy">Privacy</a>
+            <a href="#contact">Contact</a>
+        </nav>
     </header>
 
-    <section>
-        <h2>About Us</h2>
-        <p>
-            Welcome to Your App Name! We are passionate about creating innovative solutions that make a difference.
-            [アプリに関する簡単な説明や特徴をここに追加]
-        </p>
+    <main>
+        <section id="about">
+            <h2>About Us</h2>
+            <p>
+                Welcome to Your App Name! We are passionate about creating innovative solutions that make a difference and feel effortlessly approachable every step of the way.
+                <span class="placeholder-text">[アプリに関する簡単な説明や特徴をここに追加]</span>
+            </p>
+        </section>
 
-        <h2>Privacy Policy</h2>
-        <p>
-            [プライバシーポリシーの内容をここに追加]
-        </p>
+        <section id="privacy">
+            <h2>Privacy Policy</h2>
+            <p>
+                We believe trust is built through thoughtful design and transparent communication. Outline the safeguards, permissions, and data practices that keep your community safe.
+                <span class="placeholder-text">[プライバシーポリシーの内容をここに追加]</span>
+            </p>
+        </section>
 
-        <h2>Contact Us</h2>
-        <p>
-            Have questions or feedback? Feel free to reach out to us at:
-            <br>
-            Email: <a href="mailto:contact@example.com">contact@example.com</a>
-            <br>
-            Phone: +1 (123) 456-7890
-        </p>
-    </section>
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>
+                Have questions or feedback? We would love to hear from you. Reach out anytime and our team will respond shortly.
+            </p>
+            <div class="contact-card">
+                <a href="mailto:contact@example.com">contact@example.com</a>
+                <span>+1 (123) 456-7890</span>
+            </div>
+        </section>
+    </main>
 
     <footer>
         &copy; 2024 Your App Name. All rights reserved.
