@@ -14,7 +14,7 @@
 body {
     font-family: 'Roboto', sans-serif;
     margin: 0;
-    background: linear-gradient(180deg, #fafbfc 0%, var(--background) 55%, #eef0f4 100%);
+    background: linear-gradient(180deg, #edeff3 0%, #ffffff 45%, #e2e6ed 100%);
     color: var(--text);
     line-height: 1.6;
 }
@@ -22,7 +22,7 @@ body {
 header {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(236, 238, 243, 0.92) 70%, rgba(236, 238, 243, 0));
     color: var(--text);
-    padding: 2.5rem 1rem;
+    padding: 1.6rem 1rem 1.4rem;
     text-align: center;
     box-shadow: none;
     border-bottom: none;
@@ -317,7 +317,7 @@ a {
 
 footer {
     text-align: center;
-    padding: 1.5rem 1rem;
+    padding: 1rem 1rem 1.2rem;
     background: linear-gradient(180deg, rgba(232, 234, 239, 0), rgba(232, 234, 239, 0.92) 60%, rgba(255, 255, 255, 0.96) 100%);
     color: rgba(47, 58, 74, 0.85);
     border-top: none;
