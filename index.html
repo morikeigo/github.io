@@ -3,69 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your App Namea</title>
+    <title>Your App Name</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #f6a6b2;
+            --primary-light: #fbd4c7;
+            --accent: #a7c7e7;
+            --background-start: #fff7f2;
+            --background-end: #f2f7ff;
+            --section-background: rgba(255, 255, 255, 0.9);
+            --text: #3a3a3a;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+            min-height: 100vh;
+            background: linear-gradient(180deg, var(--background-start) 0%, var(--background-end) 100%);
+            color: var(--text);
+            line-height: 1.6;
         }
 
         header {
-            background-color: #4285f4;
-            color: #fff;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: #4c4c4c;
+            padding: 2.5rem 1rem;
             text-align: center;
-            padding: 1em;
+            box-shadow: 0 10px 30px rgba(246, 166, 178, 0.25);
+        }
+
+        header h1 {
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        nav {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #5b6c8f;
+            text-decoration: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            transition: background 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
         }
 
         section {
-            max-width: 800px;
-            margin: 2em auto;
-            padding: 2em;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            max-width: 900px;
+            margin: 3rem auto;
+            padding: 2.5rem;
+            background: linear-gradient(160deg, var(--section-background) 0%, rgba(255, 255, 255, 0.75) 100%);
+            border-radius: 18px;
+            box-shadow: 0 20px 40px rgba(167, 199, 231, 0.18);
+            backdrop-filter: blur(6px);
         }
 
-        h1, h2 {
-            color: #4285f4;
+        h2 {
+            color: #6f7ca6;
+            margin-top: 0;
         }
 
         p {
-            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        nav a:hover,
+        nav a:focus {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+            color: #41506e;
+            box-shadow: 0 8px 15px rgba(167, 199, 231, 0.25);
         }
 
         footer {
             text-align: center;
-            padding: 1em;
-            background-color: #4285f4;
-            color: #fff;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+            padding: 1.5rem 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: #475674;
+            font-weight: 500;
+        }
+
+        @media (max-width: 600px) {
+            section {
+                margin: 1.5rem;
+                padding: 2rem;
+            }
+
+            nav {
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Your App Name</h1>
+        <nav>
+            <a href="#about">About</a>
+            <a href="#privacy">Privacy</a>
+            <a href="#contact">Contact</a>
+        </nav>
     </header>
 
-    <section>
+    <section id="about">
         <h2>About Us</h2>
         <p>
             Welcome to Your App Name! We are passionate about creating innovative solutions that make a difference.
             [アプリに関する簡単な説明や特徴をここに追加]
         </p>
 
-        <h2>Privacy Policy</h2>
+        <h2 id="privacy">Privacy Policy</h2>
         <p>
             [プライバシーポリシーの内容をここに追加]
         </p>
 
-        <h2>Contact Us</h2>
+        <h2 id="contact">Contact Us</h2>
         <p>
             Have questions or feedback? Feel free to reach out to us at:
             <br>
