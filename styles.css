@@ -110,6 +110,12 @@ h2 {
     margin-top: 0;
 }
 
+h3 {
+    color: var(--primary-dark);
+    margin-top: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
 a {
     color: var(--primary-dark);
 }
@@ -250,6 +256,43 @@ a {
 
 .rates-table tbody tr:nth-child(even) {
     background: rgba(138, 182, 255, 0.08);
+}
+
+.historical-section {
+    margin-top: 2rem;
+}
+
+.historical-description {
+    margin: 0.5rem 0 1rem;
+    font-size: 0.95rem;
+    color: rgba(47, 58, 74, 0.85);
+}
+
+.historical-rates-table thead th {
+    white-space: nowrap;
+}
+
+.rate-change {
+    font-weight: 600;
+}
+
+.rate-change-positive {
+    color: #2e8b57;
+}
+
+.rate-change-negative {
+    color: #d35454;
+}
+
+.rate-change-neutral {
+    color: rgba(47, 58, 74, 0.8);
+}
+
+.rates-empty-row td {
+    text-align: center;
+    padding: 1.25rem;
+    color: rgba(47, 58, 74, 0.7);
+    font-style: italic;
 }
 
 .rates-row-error td {

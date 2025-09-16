@@ -93,6 +93,7 @@
                     </p>
                     <p>
                         このタブを開くと最新のレートを取得し、1時間ごとに自動で更新します。
+                        過去2週間分の日次レートと前日比も確認できます。
                     </p>
 
                     <div class="rates-meta">
@@ -129,6 +130,35 @@
                                 </tr>
                             </tbody>
                         </table>
+                    </div>
+
+                    <div class="historical-section">
+                        <h3>過去2週間の推移</h3>
+                        <p class="historical-description">
+                            営業日のみ公表されるレートを日次で表示し、前日比（％）も確認できます。
+                        </p>
+                        <div class="rates-table-wrapper">
+                            <table class="rates-table historical-rates-table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">日付</th>
+                                        <th scope="col">USD / JPY</th>
+                                        <th scope="col">前日比</th>
+                                        <th scope="col">EUR / JPY</th>
+                                        <th scope="col">前日比</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historicalRatesBody">
+                                    <tr>
+                                        <th scope="row">—</th>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                        <td>—</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <p id="statusMessage" class="rates-status-message" role="status" aria-live="polite">
