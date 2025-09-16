@@ -20,16 +20,18 @@ body {
 }
 
 header {
-    background: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
-    color: #fff;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(214, 228, 255, 0.9));
+    color: var(--text);
     padding: 2.5rem 1rem;
     text-align: center;
-    box-shadow: 0 10px 25px rgba(106, 156, 245, 0.25);
+    box-shadow: 0 10px 25px rgba(138, 182, 255, 0.2);
+    border-bottom: 1px solid rgba(138, 182, 255, 0.25);
 }
 
 header h1 {
     margin: 0;
     font-weight: 700;
+    color: var(--primary-dark);
 }
 
 nav {
@@ -37,15 +39,16 @@ nav {
 }
 
 nav a {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(47, 58, 74, 0.75);
     text-decoration: none;
     margin: 0 0.5rem;
     font-weight: 300;
-    transition: opacity 0.3s ease;
+    transition: color 0.3s ease, opacity 0.3s ease;
 }
 
 nav a:hover {
-    opacity: 0.75;
+    color: var(--primary-dark);
+    opacity: 1;
 }
 
 main {
@@ -168,7 +171,7 @@ a {
 .header-subtitle {
     margin-top: 0.75rem;
     font-weight: 300;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(47, 58, 74, 0.65);
 }
 
 .rates-meta {
@@ -315,9 +318,10 @@ a {
 footer {
     text-align: center;
     padding: 1.5rem 1rem;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: #fff;
-    box-shadow: 0 -6px 20px rgba(106, 156, 245, 0.2);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(219, 233, 255, 0.92));
+    color: rgba(47, 58, 74, 0.85);
+    border-top: 1px solid rgba(138, 182, 255, 0.25);
+    box-shadow: 0 -8px 22px rgba(138, 182, 255, 0.18);
 }
 
 @keyframes fadeIn {
