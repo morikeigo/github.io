@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.addEventListener('click', () => showTab(button.dataset.tab));
     });
 
-    document.querySelectorAll('header nav a').forEach((link) => {
+    document.querySelectorAll('header nav a[href^="#"]').forEach((link) => {
         link.addEventListener('click', () => showTab('overview'));
     });
 
