@@ -6,7 +6,6 @@
     <title>為替レート一覧 | Your App Name</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <script src="exchange.js" defer></script>
 </head>
 <body>
     <header>
@@ -14,9 +13,6 @@
         <p class="header-subtitle">
             Frankfurter API（欧州中央銀行の公表レート）から取得した最新のUSD/JPYとEUR/JPYのレートです。
         </p>
-        <nav>
-            <a href="index.html">トップページに戻る</a>
-        </nav>
     </header>
 
     <main>
@@ -75,5 +71,11 @@
     <footer>
         &copy; 2024 Your App Name. All rights reserved.
     </footer>
+
+    <script type="module">
+        import { initializeExchangeRates } from './exchange.js';
+
+        initializeExchangeRates(document);
+    </script>
 </body>
 </html>

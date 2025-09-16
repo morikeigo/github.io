@@ -1,18 +1,79 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const RATE_PAIRS = [
-        { base: 'USD', symbol: 'JPY' },
-        { base: 'EUR', symbol: 'JPY' },
-    ];
-    const REFRESH_INTERVAL_MS = 60 * 60 * 1000;
+const RATE_PAIRS = [
+    { base: 'USD', symbol: 'JPY' },
+    { base: 'EUR', symbol: 'JPY' },
+];
+const REFRESH_INTERVAL_MS = 60 * 60 * 1000;
 
-    const ratesBody = document.getElementById('ratesBody');
-    const dataDateElement = document.getElementById('ratesDataDate');
-    const lastUpdatedElement = document.getElementById('lastUpdated');
-    const statusElement = document.getElementById('statusMessage');
-    const refreshButton = document.getElementById('refreshRatesButton');
+const initializedTargets = new WeakMap();
+
+const isElement = (value) => value?.nodeType === 1;
+const isDocumentNode = (value) => value?.nodeType === 9;
+
+const resolveRoot = (target) => {
+    if (isElement(target) || isDocumentNode(target)) {
+        return target;
+    }
+
+    if (target && typeof target === 'object') {
+        const { root, container, element } = target;
+        if (isElement(root) || isDocumentNode(root)) {
+            return root;
+        }
+        if (isElement(container) || isDocumentNode(container)) {
+            return container;
+        }
+        if (isElement(element) || isDocumentNode(element)) {
+            return element;
+        }
+    }
+
+    return document;
+};
+
+const fetchPair = async ({ base, symbol }) => {
+    const url = `https://api.frankfurter.dev/v1/latest?base=${base}&symbols=${symbol}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error(`Frankfurter API responded with status ${response.status}`);
+    }
+
+    const payload = await response.json();
+    const rate = payload?.rates?.[symbol];
+
+    if (typeof rate !== 'number') {
+        throw new Error('Frankfurter API response did not include the expected rate.');
+    }
+
+    return {
+        base,
+        symbol,
+        rate,
+        date: payload.date,
+    };
+};
+
+export function initializeExchangeRates(target) {
+    const root = resolveRoot(target);
+
+    if (!root || !(isElement(root) || isDocumentNode(root))) {
+        console.warn('initializeExchangeRates called without a valid root element.');
+        return null;
+    }
+
+    if (initializedTargets.has(root)) {
+        return initializedTargets.get(root);
+    }
+
+    const ratesBody = root.querySelector('#ratesBody');
+    const dataDateElement = root.querySelector('#ratesDataDate');
+    const lastUpdatedElement = root.querySelector('#lastUpdated');
+    const statusElement = root.querySelector('#statusMessage');
+    const refreshButton = root.querySelector('#refreshRatesButton');
 
     if (!ratesBody || !lastUpdatedElement || !statusElement) {
-        return;
+        console.warn('Exchange rates UI elements are missing. Initialization skipped.');
+        return null;
     }
 
     const numberFormatter = new Intl.NumberFormat('ja-JP', {
@@ -38,29 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return dateFormatter.format(date);
     };
     const formatDateTime = (date) => dateTimeFormatter.format(date);
-
-    const fetchPair = async ({ base, symbol }) => {
-        const url = `https://api.frankfurter.dev/v1/latest?base=${base}&symbols=${symbol}`;
-        const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error(`Frankfurter API responded with status ${response.status}`);
-        }
-
-        const payload = await response.json();
-        const rate = payload?.rates?.[symbol];
-
-        if (typeof rate !== 'number') {
-            throw new Error('Frankfurter API response did not include the expected rate.');
-        }
-
-        return {
-            base,
-            symbol,
-            rate,
-            date: payload.date,
-        };
-    };
 
     const renderFallbackRows = () => {
         ratesBody.innerHTML = '';
@@ -173,12 +211,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const handleRefreshButtonClick = () => {
+        refreshRates();
+    };
+
     if (refreshButton) {
-        refreshButton.addEventListener('click', () => {
-            refreshRates();
-        });
+        refreshButton.addEventListener('click', handleRefreshButtonClick);
     }
 
+    const intervalId = setInterval(refreshRates, REFRESH_INTERVAL_MS);
+
     refreshRates();
-    setInterval(refreshRates, REFRESH_INTERVAL_MS);
-});
+
+    const destroy = () => {
+        if (refreshButton) {
+            refreshButton.removeEventListener('click', handleRefreshButtonClick);
+        }
+        clearInterval(intervalId);
+        initializedTargets.delete(root);
+    };
+
+    const state = {
+        refreshRates,
+        destroy,
+    };
+
+    initializedTargets.set(root, state);
+    return state;
+}
