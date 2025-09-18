@@ -19,7 +19,6 @@
                 <div class="tab-buttons">
                     <button class="tab-button active" data-tab="overview">Overview</button>
                     <button class="tab-button" data-tab="statistics">Statistics</button>
-                    <button class="tab-button" data-tab="exchange">為替レート</button>
                 </div>
                 <div class="tab-content active" id="tab-overview">
                     <h2 id="about">About Us</h2>
@@ -85,89 +84,6 @@
                     <div class="chart-wrapper">
                         <canvas id="normalDistributionChart" aria-label="Normal distribution chart" role="img"></canvas>
                     </div>
-                </div>
-                <div class="tab-content" id="tab-exchange">
-                    <h2>為替レート</h2>
-                    <p>
-                        Frankfurter API（欧州中央銀行の公表レート）から取得した最新のUSD/JPYとEUR/JPYのレートです。
-                    </p>
-                    <p>
-                        このタブを開くと最新のレートを取得し、1時間ごとに自動で更新します。
-                        過去2週間分の日次レートと前日比も確認できます。
-                    </p>
-
-                    <div class="rates-meta">
-                        <div class="rates-meta-item">
-                            <span class="rates-meta-label">データ日</span>
-                            <span class="rates-meta-value" id="ratesDataDate">—</span>
-                        </div>
-                        <div class="rates-meta-item">
-                            <span class="rates-meta-label">取得時刻</span>
-                            <span class="rates-meta-value" id="lastUpdated">—</span>
-                        </div>
-                        <button type="button" class="refresh-button" id="refreshRatesButton">今すぐ更新</button>
-                    </div>
-
-                    <div class="rates-table-wrapper">
-                        <table class="rates-table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">通貨ペア</th>
-                                    <th scope="col">レート</th>
-                                    <th scope="col">レート更新日</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ratesBody">
-                                <tr>
-                                    <th scope="row">USD / JPY</th>
-                                    <td>—</td>
-                                    <td>—</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">EUR / JPY</th>
-                                    <td>—</td>
-                                    <td>—</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="historical-section">
-                        <h3>過去2週間の推移</h3>
-                        <p class="historical-description">
-                            営業日のみ公表されるレートを日次で表示し、前日比（％）も確認できます。
-                        </p>
-                        <div class="rates-table-wrapper">
-                            <table class="rates-table historical-rates-table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">日付</th>
-                                        <th scope="col">USD / JPY</th>
-                                        <th scope="col">前日比</th>
-                                        <th scope="col">EUR / JPY</th>
-                                        <th scope="col">前日比</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="historicalRatesBody">
-                                    <tr>
-                                        <th scope="row">—</th>
-                                        <td>—</td>
-                                        <td>—</td>
-                                        <td>—</td>
-                                        <td>—</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <p id="statusMessage" class="rates-status-message" role="status" aria-live="polite">
-                        最新のレートを取得しています...
-                    </p>
-
-                    <p class="rates-footnote">
-                        データソース: <a href="https://www.frankfurter.dev/docs/" target="_blank" rel="noopener noreferrer">Frankfurter API</a>
-                    </p>
                 </div>
             </div>
         </section>

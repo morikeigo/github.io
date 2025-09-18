@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
-    let exchangeModulePromise = null;
-
     const activateTab = (name) => {
         tabButtons.forEach((button) => {
             button.classList.toggle('active', button.dataset.tab === name);
@@ -13,38 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const loadExchangeModule = () => {
-        if (exchangeModulePromise) {
-            return exchangeModulePromise;
-        }
-
-        const tabContent = document.getElementById('tab-exchange');
-        if (!tabContent) {
-            exchangeModulePromise = Promise.resolve();
-            return exchangeModulePromise;
-        }
-
-        exchangeModulePromise = import('./exchange.js')
-            .then(({ initializeExchangeRates }) => {
-                if (typeof initializeExchangeRates === 'function') {
-                    return initializeExchangeRates(tabContent);
-                }
-                return undefined;
-            })
-            .catch((error) => {
-                console.error('Failed to load exchange rates module.', error);
-                exchangeModulePromise = null;
-            });
-
-        return exchangeModulePromise;
-    };
-
     const showTab = (name) => {
         activateTab(name);
-
-        if (name === 'exchange') {
-            loadExchangeModule();
-        }
     };
 
     tabButtons.forEach((button) => {
