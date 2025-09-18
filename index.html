@@ -19,6 +19,7 @@
                 <div class="tab-buttons">
                     <button class="tab-button active" data-tab="overview">Overview</button>
                     <button class="tab-button" data-tab="statistics">Statistics</button>
+                    <button class="tab-button" data-tab="3d">3D View</button>
                 </div>
                 <div class="tab-content active" id="tab-overview">
                     <h2 id="about">About Us</h2>
@@ -83,6 +84,24 @@
                     </div>
                     <div class="chart-wrapper">
                         <canvas id="normalDistributionChart" aria-label="Normal distribution chart" role="img"></canvas>
+                    </div>
+                </div>
+                <div class="tab-content" id="tab-3d">
+                    <h2>3D Preview</h2>
+                    <p>
+                        Experience a softly lit 3D cube rendered directly in your browser. The view loads on demand so the resources
+                        are only used when you explore this tab.
+                    </p>
+                    <div class="three-d-wrapper" id="threeWrapper">
+                        <div class="three-d-status" id="threeStatus" role="status" aria-live="polite">
+                            The 3D preview starts loading as soon as you open this tab.
+                        </div>
+                        <canvas
+                            id="threeCanvas"
+                            class="three-d-canvas"
+                            aria-label="Rotating cube 3D visualization"
+                            role="img"
+                        ></canvas>
                     </div>
                 </div>
             </div>
