@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (status) {
-                status.textContent = 'Loading 3D scene...';
+                status.textContent = 'Loading city scene...';
                 status.classList.remove('error');
                 status.classList.remove('hidden');
             }
@@ -253,93 +253,229 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         gl.useProgram(program);
 
-                        const positions = new Float32Array([
-                            // Front
-                            -1, -1, 1,
-                            1, -1, 1,
-                            1, 1, 1,
-                            -1, 1, 1,
-                            // Back
-                            -1, -1, -1,
-                            -1, 1, -1,
-                            1, 1, -1,
-                            1, -1, -1,
-                            // Top
-                            -1, 1, -1,
-                            -1, 1, 1,
-                            1, 1, 1,
-                            1, 1, -1,
-                            // Bottom
-                            -1, -1, -1,
-                            1, -1, -1,
-                            1, -1, 1,
-                            -1, -1, 1,
-                            // Right
-                            1, -1, -1,
-                            1, 1, -1,
-                            1, 1, 1,
-                            1, -1, 1,
-                            // Left
-                            -1, -1, -1,
-                            -1, -1, 1,
-                            -1, 1, 1,
-                            -1, 1, -1,
-                        ]);
+                        const positionsArray = [];
+                        const colorsArray = [];
+                        const normalsArray = [];
+                        const indicesArray = [];
+                        let vertexOffset = 0;
 
-                        const faceColors = [
-                            [0.45, 0.64, 0.98],
-                            [0.34, 0.53, 0.92],
-                            [0.58, 0.77, 1.0],
-                            [0.32, 0.49, 0.9],
-                            [0.5, 0.7, 0.99],
-                            [0.4, 0.6, 0.94],
-                        ];
+                        const addFace = (a, b, c, d, normal, color) => {
+                            positionsArray.push(...a, ...b, ...c, ...d);
+                            for (let i = 0; i < 4; i += 1) {
+                                normalsArray.push(...normal);
+                                colorsArray.push(...color);
+                            }
+                            indicesArray.push(
+                                vertexOffset,
+                                vertexOffset + 1,
+                                vertexOffset + 2,
+                                vertexOffset,
+                                vertexOffset + 2,
+                                vertexOffset + 3
+                            );
+                            vertexOffset += 4;
+                        };
 
-                        const colors = new Float32Array(
-                            faceColors.flatMap((color) => [...color, ...color, ...color, ...color])
-                        );
+                        const addGround = (size, y, color) => {
+                            const half = size / 2;
+                            addFace(
+                                [-half, y, -half],
+                                [-half, y, half],
+                                [half, y, half],
+                                [half, y, -half],
+                                [0, 1, 0],
+                                color
+                            );
+                        };
 
-                        const normals = new Float32Array([
-                            // Front
-                            0, 0, 1,
-                            0, 0, 1,
-                            0, 0, 1,
-                            0, 0, 1,
-                            // Back
-                            0, 0, -1,
-                            0, 0, -1,
-                            0, 0, -1,
-                            0, 0, -1,
-                            // Top
-                            0, 1, 0,
-                            0, 1, 0,
-                            0, 1, 0,
-                            0, 1, 0,
-                            // Bottom
-                            0, -1, 0,
-                            0, -1, 0,
-                            0, -1, 0,
-                            0, -1, 0,
-                            // Right
-                            1, 0, 0,
-                            1, 0, 0,
-                            1, 0, 0,
-                            1, 0, 0,
-                            // Left
-                            -1, 0, 0,
-                            -1, 0, 0,
-                            -1, 0, 0,
-                            -1, 0, 0,
-                        ]);
+                        const addBuilding = ({
+                            x,
+                            z,
+                            width,
+                            depth,
+                            height,
+                            baseHeight = 0,
+                            sideColor,
+                            roofColor,
+                            baseColor = sideColor,
+                            includeBottom = true,
+                        }) => {
+                            const halfWidth = width / 2;
+                            const halfDepth = depth / 2;
+                            const bottom = baseHeight;
+                            const top = baseHeight + height;
 
-                        const indices = new Uint16Array([
-                            0, 1, 2, 0, 2, 3,
-                            4, 5, 6, 4, 6, 7,
-                            8, 9, 10, 8, 10, 11,
-                            12, 13, 14, 12, 14, 15,
-                            16, 17, 18, 16, 18, 19,
-                            20, 21, 22, 20, 22, 23,
-                        ]);
+                            const frontLeftBottom = [x - halfWidth, bottom, z + halfDepth];
+                            const frontRightBottom = [x + halfWidth, bottom, z + halfDepth];
+                            const backRightBottom = [x + halfWidth, bottom, z - halfDepth];
+                            const backLeftBottom = [x - halfWidth, bottom, z - halfDepth];
+
+                            const frontLeftTop = [x - halfWidth, top, z + halfDepth];
+                            const frontRightTop = [x + halfWidth, top, z + halfDepth];
+                            const backRightTop = [x + halfWidth, top, z - halfDepth];
+                            const backLeftTop = [x - halfWidth, top, z - halfDepth];
+
+                            addFace(
+                                frontLeftBottom,
+                                frontRightBottom,
+                                frontRightTop,
+                                frontLeftTop,
+                                [0, 0, 1],
+                                sideColor
+                            );
+                            addFace(
+                                backLeftBottom,
+                                backLeftTop,
+                                backRightTop,
+                                backRightBottom,
+                                [0, 0, -1],
+                                sideColor
+                            );
+                            addFace(
+                                backRightBottom,
+                                backRightTop,
+                                frontRightTop,
+                                frontRightBottom,
+                                [1, 0, 0],
+                                sideColor
+                            );
+                            addFace(
+                                backLeftBottom,
+                                frontLeftBottom,
+                                frontLeftTop,
+                                backLeftTop,
+                                [-1, 0, 0],
+                                sideColor
+                            );
+                            addFace(
+                                backLeftTop,
+                                frontLeftTop,
+                                frontRightTop,
+                                backRightTop,
+                                [0, 1, 0],
+                                roofColor
+                            );
+
+                            if (includeBottom) {
+                                addFace(
+                                    backLeftBottom,
+                                    backRightBottom,
+                                    frontRightBottom,
+                                    frontLeftBottom,
+                                    [0, -1, 0],
+                                    baseColor
+                                );
+                            }
+                        };
+
+                        addGround(8, -0.05, [0.18, 0.22, 0.28]);
+
+                        addBuilding({
+                            x: 0,
+                            z: 0,
+                            width: 1.2,
+                            depth: 1.2,
+                            height: 2.6,
+                            sideColor: [0.52, 0.67, 0.88],
+                            roofColor: [0.74, 0.82, 0.94],
+                            baseColor: [0.4, 0.53, 0.72],
+                        });
+                        addBuilding({
+                            x: 0,
+                            z: 0,
+                            width: 0.6,
+                            depth: 0.6,
+                            height: 1.1,
+                            baseHeight: 2.6,
+                            sideColor: [0.66, 0.79, 0.94],
+                            roofColor: [0.82, 0.89, 0.97],
+                            includeBottom: false,
+                        });
+                        addBuilding({
+                            x: -1.7,
+                            z: 0.3,
+                            width: 0.9,
+                            depth: 1.0,
+                            height: 1.7,
+                            sideColor: [0.44, 0.58, 0.78],
+                            roofColor: [0.62, 0.72, 0.86],
+                            baseColor: [0.32, 0.45, 0.64],
+                        });
+                        addBuilding({
+                            x: 1.8,
+                            z: -0.4,
+                            width: 1.2,
+                            depth: 0.8,
+                            height: 1.5,
+                            sideColor: [0.57, 0.69, 0.85],
+                            roofColor: [0.74, 0.82, 0.93],
+                            baseColor: [0.46, 0.59, 0.78],
+                        });
+                        addBuilding({
+                            x: -0.6,
+                            z: 1.9,
+                            width: 0.8,
+                            depth: 1.3,
+                            height: 1.2,
+                            sideColor: [0.54, 0.66, 0.82],
+                            roofColor: [0.7, 0.79, 0.9],
+                            baseColor: [0.42, 0.53, 0.7],
+                        });
+                        addBuilding({
+                            x: 1.2,
+                            z: 1.6,
+                            width: 0.7,
+                            depth: 0.7,
+                            height: 1.9,
+                            sideColor: [0.6, 0.72, 0.9],
+                            roofColor: [0.76, 0.84, 0.95],
+                            baseColor: [0.48, 0.59, 0.78],
+                        });
+                        addBuilding({
+                            x: -1.1,
+                            z: -1.6,
+                            width: 0.6,
+                            depth: 1.1,
+                            height: 1.0,
+                            sideColor: [0.47, 0.6, 0.78],
+                            roofColor: [0.66, 0.76, 0.88],
+                            baseColor: [0.35, 0.48, 0.66],
+                        });
+                        addBuilding({
+                            x: 0.9,
+                            z: -1.8,
+                            width: 2.4,
+                            depth: 0.5,
+                            height: 0.25,
+                            sideColor: [0.33, 0.38, 0.45],
+                            roofColor: [0.46, 0.5, 0.56],
+                            baseColor: [0.26, 0.3, 0.36],
+                        });
+                        addBuilding({
+                            x: -2.2,
+                            z: -0.8,
+                            width: 0.5,
+                            depth: 0.5,
+                            height: 1.5,
+                            sideColor: [0.62, 0.74, 0.9],
+                            roofColor: [0.78, 0.86, 0.96],
+                            baseColor: [0.5, 0.62, 0.78],
+                        });
+                        addBuilding({
+                            x: 2.1,
+                            z: 1.1,
+                            width: 0.9,
+                            depth: 0.6,
+                            height: 1.3,
+                            sideColor: [0.49, 0.63, 0.82],
+                            roofColor: [0.68, 0.78, 0.9],
+                            baseColor: [0.36, 0.49, 0.68],
+                        });
+
+                        const positions = new Float32Array(positionsArray);
+                        const colors = new Float32Array(colorsArray);
+                        const normals = new Float32Array(normalsArray);
+                        const indices = new Uint16Array(indicesArray);
 
                         const positionBuffer = gl.createBuffer();
                         const colorBuffer = gl.createBuffer();
@@ -478,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         console.error('Failed to initialize 3D scene', error);
                         if (status) {
                             status.textContent =
-                                '3D view could not be loaded. Please ensure your browser supports WebGL.';
+                                'The skyline view could not be loaded. Please ensure your browser supports WebGL.';
                             status.classList.add('error');
                             status.classList.remove('hidden');
                         }
